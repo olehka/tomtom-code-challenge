@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_document"
+    app:startDestination="@id/document_list_fragment">
+
+    <fragment
+        android:id="@+id/document_list_fragment"
+        android:name="com.tomtom.codechallenge.DocumentListFragment">
+
+        <action
+            android:id="@+id/action_document_list_to_document_detail_fragment"
+            app:destination="@id/document_detail_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/document_detail_fragment"
+        android:name="com.tomtom.codechallenge.DocumentDetailFragment">
+
+        <argument
+            android:name="documentId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
