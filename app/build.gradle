@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileSdkVersion 29
@@ -28,6 +29,7 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "androidx.navigation:navigation-fragment:2.2.1"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
     // Note: You are expected to use (only) one of these two JSON parsing libraries
     implementation "com.fasterxml.jackson.core:jackson-core:2.9.6"
