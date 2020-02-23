@@ -6,7 +6,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tomtom.codechallenge.DocumentListFragmentDirections;
+import com.tomtom.codechallenge.ui.DocumentListFragmentDirections;
 import com.tomtom.codechallenge.data.Document;
 import com.tomtom.codechallenge.databinding.ListItemDocumentBinding;
 

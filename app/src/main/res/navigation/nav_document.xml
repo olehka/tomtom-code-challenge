@@ -6,8 +6,7 @@
 
     <fragment
         android:id="@+id/document_list_fragment"
-        android:name="com.tomtom.codechallenge.DocumentListFragment">
-
+        android:name="com.tomtom.codechallenge.ui.DocumentListFragment">
         <action
             android:id="@+id/action_document_list_to_document_detail_fragment"
             app:destination="@id/document_detail_fragment" />
@@ -15,8 +14,7 @@
 
     <fragment
         android:id="@+id/document_detail_fragment"
-        android:name="com.tomtom.codechallenge.DocumentDetailFragment">
-
+        android:name="com.tomtom.codechallenge.ui.DocumentDetailFragment">
         <argument
             android:name="documentId"
             app:argType="string" />
