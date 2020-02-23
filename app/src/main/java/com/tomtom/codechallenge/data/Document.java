@@ -1,9 +1,14 @@
 package com.tomtom.codechallenge.data;
 
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+
+@Entity(tableName = "documents")
 public class Document {
 
+    @PrimaryKey
     private String id;
     private String title;
     private String author;
