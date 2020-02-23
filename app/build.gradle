@@ -33,8 +33,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.4"
 
     // Note: You are expected to use (only) one of these two JSON parsing libraries
-    implementation "com.fasterxml.jackson.core:jackson-core:2.9.6"
-    implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.10.2"
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
 
 //    testImplementation 'junit:junit:4.12'
 //    androidTestImplementation 'com.android.support.test:runner:1.0.2'
