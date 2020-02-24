@@ -18,21 +18,21 @@ public class DocumentListViewModel extends ViewModel {
 
     private static final String QUERY_KEY = "QUERY";
 
-//    private final DataRepository repository;
+    private final DataRepository repository;
     private final SavedStateHandle savedStateHandle;
 
     private final LiveData<List<Document>> documents;
 
     DocumentListViewModel(@NonNull DataRepository repository, @NonNull SavedStateHandle savedStateHandle) {
-//        this.repository = repository;
+        this.repository = repository;
         this.savedStateHandle = savedStateHandle;
         this.documents = Transformations.switchMap(
                 savedStateHandle.getLiveData(QUERY_KEY),
                 (Function<String, LiveData<List<Document>>>) query -> {
                     if (TextUtils.isEmpty(query)) {
-                        return repository.getDocuments();
+                        return repository.getAllDocumentsFromDb();
                     } else {
-                        return repository.searchDocuments(query);
+                        return repository.searchDocumentsByQuery(query);
                     }
                 }
         );
@@ -44,5 +44,6 @@ public class DocumentListViewModel extends ViewModel {
 
     public void setQuery(String query) {
         savedStateHandle.set(QUERY_KEY, query);
+        repository.fetchDocumentsByQueryFromNetwork(query);
     }
 }

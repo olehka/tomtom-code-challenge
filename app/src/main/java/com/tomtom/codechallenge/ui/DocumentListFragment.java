@@ -1,6 +1,7 @@
 package com.tomtom.codechallenge.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,10 @@ public class DocumentListFragment extends Fragment {
 
     private void subscribeUi(LiveData<List<Document>> liveData) {
         liveData.observe(getViewLifecycleOwner(), documents -> {
-            if (documents != null) {
+            if (documents != null && !documents.isEmpty()) {
                 adapter.submitList(documents);
+            } else {
+                Log.e("DocumentListFragment", "Error: documents are empty");
             }
         });
     }

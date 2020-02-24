@@ -1,5 +1,7 @@
 package com.tomtom.codechallenge.data.network;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tomtom.codechallenge.data.Document;
@@ -16,13 +18,14 @@ public class HttpClient {
 
     private static HttpClient instance;
 
-    private static final int TIMEOUT_5_SEC = 5000;
+    private static final int TIMEOUT_10_SEC = 10000;
 
     private static final String REQUEST_METHOD_GET = "GET";
 
     private HttpClient() {}
 
     ApiResponse<List<Document>> fetchDocuments(String requestUrl) {
+        Log.d("HttpClient", "requestUrl: " + requestUrl);
         HttpURLConnection httpURLConnection = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
@@ -70,8 +73,8 @@ public class HttpClient {
     private HttpURLConnection createConnection(URL url) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod(REQUEST_METHOD_GET);
-        httpURLConnection.setConnectTimeout(TIMEOUT_5_SEC);
-        httpURLConnection.setReadTimeout(TIMEOUT_5_SEC);
+        httpURLConnection.setConnectTimeout(TIMEOUT_10_SEC);
+        httpURLConnection.setReadTimeout(TIMEOUT_10_SEC);
         httpURLConnection.connect();
         return httpURLConnection;
     }

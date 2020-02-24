@@ -15,7 +15,7 @@ public class DocumentDetailViewModel extends ViewModel {
     public DocumentDetailViewModel(DataRepository repository, String documentId) {
 //        this.repository = repository;
 //        this.documentId = documentId;
-        this.document = repository.getDocument(documentId);
+        this.document = repository.getDocumentById(documentId);
     }
 
     public LiveData<Document> getDocument() {
