@@ -11,14 +11,14 @@ public class DocumentDetailViewModelFactory extends ViewModelProvider.NewInstanc
     private final DataRepository repository;
     private final String documentId;
 
-    public DocumentDetailViewModelFactory(DataRepository repository, String documentId) {
-        this.repository = repository;
+    public DocumentDetailViewModelFactory(String documentId, DataRepository repository) {
         this.documentId = documentId;
+        this.repository = repository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new DocumentDetailViewModel(repository, documentId);
+        return (T) new DocumentDetailViewModel(documentId, repository);
     }
 }

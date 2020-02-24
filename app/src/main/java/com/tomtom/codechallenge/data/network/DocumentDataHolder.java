@@ -7,7 +7,7 @@ import com.tomtom.codechallenge.data.Document;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class JsonDocumentDataHolder {
+class DocumentDataHolder {
 
     @JsonProperty("docs")
     List<Document> documents;

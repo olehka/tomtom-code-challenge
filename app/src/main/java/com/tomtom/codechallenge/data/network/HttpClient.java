@@ -1,5 +1,7 @@
 package com.tomtom.codechallenge.data.network;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,7 +47,7 @@ public class HttpClient {
                 }
                 return ApiResponse.success(parseJsonResponse(stringBuilder.toString()));
             } else {
-                return ApiResponse.error("Error GET Request, Status-Code: " + code);
+                return ApiResponse.error("Error GET Documents, Status-Code: " + code);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,6 +72,32 @@ public class HttpClient {
         }
     }
 
+    ApiResponse<Bitmap> loadCoveImage(String requestUrl) {
+        Log.d("HttpClient", "requestUrl: " + requestUrl);
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(requestUrl);
+            httpURLConnection = createConnection(url);
+            int code = httpURLConnection.getResponseCode();
+            if (code == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, decodeOptions);
+                return ApiResponse.success(bitmap);
+            } else {
+                return ApiResponse.error("Error GET CoverImage, Status-Code: " + code);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ApiResponse.error(e.getMessage());
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+                httpURLConnection = null;
+            }
+        }
+    }
+
     private HttpURLConnection createConnection(URL url) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod(REQUEST_METHOD_GET);
@@ -81,7 +109,7 @@ public class HttpClient {
 
     private List<Document> parseJsonResponse(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonDocumentDataHolder dataHolder = objectMapper.readValue(json, JsonDocumentDataHolder.class);
+        DocumentDataHolder dataHolder = objectMapper.readValue(json, DocumentDataHolder.class);
         return dataHolder.documents;
     }
 

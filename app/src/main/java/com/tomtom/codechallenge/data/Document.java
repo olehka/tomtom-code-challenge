@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -25,12 +26,16 @@ public class Document {
     @JsonProperty("author_name")
     private List<String> authors;
 
+    @JsonProperty("isbn")
+    private List<String> isbnList;
+
     public Document() {}
 
-    public Document(@NonNull String id, String title, List<String> authors) {
+    public Document(@NonNull String id, String title, List<String> authors, List<String> isbnList) {
         this.id = id;
         this.title = title;
         this.authors = authors;
+        this.isbnList = isbnList;
     }
 
     public void setId(@NonNull String id) {
@@ -43,6 +48,10 @@ public class Document {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
+    }
+
+    public void setIsbnList(List<String> isbnList) {
+        this.isbnList = isbnList;
     }
 
     @NonNull
@@ -60,6 +69,10 @@ public class Document {
 
     public String getAuthor() {
         return authors.isEmpty() ? "" : authors.get(0);
+    }
+
+    public List<String> getIsbnList() {
+        return isbnList;
     }
 
     @Override

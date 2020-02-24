@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
-import com.tomtom.codechallenge.AppExecutors;
+import com.tomtom.codechallenge.concurrent.AppExecutors;
 import com.tomtom.codechallenge.data.DataRepository;
 import com.tomtom.codechallenge.data.db.AppDatabase;
 import com.tomtom.codechallenge.data.db.DocumentDao;
@@ -37,6 +37,6 @@ public class InjectorUtil {
     }
 
     public static DocumentDetailViewModelFactory getDocumentDetailViewModelFactory(Fragment fragment, String documentId) {
-        return new DocumentDetailViewModelFactory(getRepository(fragment.requireContext()), documentId);
+        return new DocumentDetailViewModelFactory(documentId, getRepository(fragment.requireContext()));
     }
 }

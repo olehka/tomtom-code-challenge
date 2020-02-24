@@ -1,4 +1,4 @@
-package com.tomtom.codechallenge;
+package com.tomtom.codechallenge.concurrent;
 
 import android.os.Handler;
 import android.os.Looper;
