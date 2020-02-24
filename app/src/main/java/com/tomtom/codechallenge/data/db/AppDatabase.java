@@ -10,7 +10,7 @@ import androidx.room.TypeConverters;
 import com.tomtom.codechallenge.data.Document;
 
 
-@Database(entities = {Document.class}, version = 1)
+@Database(entities = {Document.class}, version = 1, exportSchema = false)
 @TypeConverters({DocumentTypeConverters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

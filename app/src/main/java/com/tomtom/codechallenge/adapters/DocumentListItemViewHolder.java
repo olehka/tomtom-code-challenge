@@ -21,10 +21,10 @@ class DocumentListItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void initClickListener() {
-        binding.setClickListener(v -> navigateToDocument(v, binding.getDocument()));
+        binding.setClickListener(v -> navigateToDocumentScreen(v, binding.getDocument()));
     }
 
-    private void navigateToDocument(View view, Document document) {
+    private void navigateToDocumentScreen(View view, Document document) {
         NavDirections directions = DocumentListFragmentDirections.actionDocumentListToDocumentDetailFragment(document.getId());
         Navigation.findNavController(view).navigate(directions);
     }

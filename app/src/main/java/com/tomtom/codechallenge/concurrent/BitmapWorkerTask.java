@@ -26,12 +26,17 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... strings) {
+        if (strings.length < 2) {
+            Log.e("BitmapWorkerTask", "Error GET Bitmap: lack of parameters");
+            return null;
+        }
         String isnbValue = strings[0];
+        String size = strings[1];
         Bitmap bitmap = repository.getBitmapFromMemoryCache(isnbValue);
         if (bitmap != null) {
             return bitmap;
         }
-        ApiResponse<Bitmap> response = apiService.getIsbnCoverImage(isnbValue);
+        ApiResponse<Bitmap> response = apiService.getIsbnCoverImage(isnbValue, size);
         if (response.hasError()) {
             Log.e("BitmapWorkerTask", "Error GET Bitmap: " + response.getError());
             return null;

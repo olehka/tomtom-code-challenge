@@ -6,12 +6,15 @@ public class NetworkUtil {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(baseUrl).append("?");
         stringBuilder.append(key).append("=");
-        stringBuilder.append(processParameters(value));
+        stringBuilder.append(processRequestParams(value));
         return stringBuilder.toString();
     }
 
-    public static String processParameters(String value) {
-        String[] words = value.toLowerCase().split("\\s");
+    public static String processRequestParams(String value) {
+        String[] words = value
+                .toLowerCase()
+                .replaceAll("[^a-zA-Z0-9\\s+]", "")
+                .split("\\s");
         StringBuilder stringBuilder = new StringBuilder();
         for (String word: words) {
             stringBuilder.append(word);

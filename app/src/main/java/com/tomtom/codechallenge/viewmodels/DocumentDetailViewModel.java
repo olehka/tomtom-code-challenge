@@ -49,7 +49,8 @@ public class DocumentDetailViewModel extends ViewModel {
     }
 
     public void loadIsbnImage(int id, String isbnValue, String size) {
-        taskRunner.executeAsync(new BitmapLoadingTask(repository, isbnValue, size),
+        taskRunner.executeAsync(
+                new BitmapLoadingTask(repository, isbnValue, size),
                 (bitmap) -> bitmapList.get(id).setValue(bitmap));
     }
 }

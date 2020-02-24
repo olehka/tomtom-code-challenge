@@ -3,12 +3,12 @@ package com.tomtom.codechallenge.data;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -23,6 +23,8 @@ public class Document {
     @JsonProperty
     private String title;
 
+    private String author;
+
     @JsonProperty("author_name")
     private List<String> authors;
 
@@ -31,6 +33,7 @@ public class Document {
 
     public Document() {}
 
+    @Ignore
     public Document(@NonNull String id, String title, List<String> authors, List<String> isbnList) {
         this.id = id;
         this.title = title;
@@ -48,6 +51,10 @@ public class Document {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public void setIsbnList(List<String> isbnList) {
@@ -68,7 +75,7 @@ public class Document {
     }
 
     public String getAuthor() {
-        return authors.isEmpty() ? "" : authors.get(0);
+        return (authors == null || authors.isEmpty()) ? "" : authors.get(0);
     }
 
     public List<String> getIsbnList() {
@@ -77,6 +84,9 @@ public class Document {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (obj == null) {
+            return false;
+        }
         if (obj == this) {
             return true;
         }
@@ -84,7 +94,7 @@ public class Document {
             return false;
         }
         Document doc = (Document) obj;
-        return id.equals(doc.id) && title.equals(doc.title) && authors.equals(doc.authors);
+        return id.equals(doc.id) && title.equals(doc.title) && author.equals(doc.author);
     }
 
     @Override
@@ -92,7 +102,7 @@ public class Document {
         int hash = 7;
         hash = 31 * hash + id.hashCode();
         hash = 31 * hash + title.hashCode();
-        hash = 31 * hash + authors.hashCode();
+        hash = 31 * hash + author.hashCode();
         return hash;
     }
 }

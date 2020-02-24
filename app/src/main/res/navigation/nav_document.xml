@@ -10,11 +10,24 @@
         <action
             android:id="@+id/action_document_list_to_document_detail_fragment"
             app:destination="@id/document_detail_fragment" />
+        <argument
+            android:name="title"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="author"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
     <fragment
         android:id="@+id/document_detail_fragment"
         android:name="com.tomtom.codechallenge.ui.DocumentDetailFragment">
+        <action
+            android:id="@+id/action_document_detail_to_document_list_fragmane"
+            app:destination="@id/document_list_fragment" />
         <argument
             android:name="documentId"
             app:argType="string" />

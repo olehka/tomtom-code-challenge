@@ -33,7 +33,7 @@ public class InjectorUtil {
     }
 
     public static DocumentListViewModelFactory getDocumentListViewModelFactory(Fragment fragment) {
-        return new DocumentListViewModelFactory(getRepository(fragment.requireContext()), fragment, null);
+        return new DocumentListViewModelFactory(getRepository(fragment.requireContext()));
     }
 
     public static DocumentDetailViewModelFactory getDocumentDetailViewModelFactory(Fragment fragment, String documentId) {

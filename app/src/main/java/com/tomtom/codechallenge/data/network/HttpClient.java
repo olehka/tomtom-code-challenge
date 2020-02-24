@@ -75,12 +75,13 @@ public class HttpClient {
     ApiResponse<Bitmap> loadCoveImage(String requestUrl) {
         Log.d("HttpClient", "requestUrl: " + requestUrl);
         HttpURLConnection httpURLConnection = null;
+        InputStream inputStream = null;
         try {
             URL url = new URL(requestUrl);
             httpURLConnection = createConnection(url);
             int code = httpURLConnection.getResponseCode();
             if (code == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = httpURLConnection.getInputStream();
+                inputStream = httpURLConnection.getInputStream();
                 BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, decodeOptions);
                 return ApiResponse.success(bitmap);
@@ -91,9 +92,17 @@ public class HttpClient {
             e.printStackTrace();
             return ApiResponse.error(e.getMessage());
         } finally {
-            if (httpURLConnection != null) {
-                httpURLConnection.disconnect();
-                httpURLConnection = null;
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                    inputStream = null;
+                }
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                    httpURLConnection = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

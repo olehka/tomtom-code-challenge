@@ -1,7 +1,8 @@
 package com.tomtom.codechallenge.ui;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.tomtom.codechallenge.databinding.FragmentDocumentListBinding;
 import com.tomtom.codechallenge.utilities.InjectorUtil;
 import com.tomtom.codechallenge.viewmodels.DocumentListViewModel;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DocumentListFragment extends Fragment {
@@ -40,6 +42,7 @@ public class DocumentListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, InjectorUtil.getDocumentListViewModelFactory(this)).get(DocumentListViewModel.class);
         setSearchClickListener();
+        checkArguments();
         subscribeUi(viewModel.getDocuments());
     }
 
@@ -52,18 +55,37 @@ public class DocumentListFragment extends Fragment {
 
     private void subscribeUi(LiveData<List<Document>> liveData) {
         liveData.observe(getViewLifecycleOwner(), documents -> {
-            if (documents != null && !documents.isEmpty()) {
-                adapter.submitList(documents);
+            if (documents == null || documents.isEmpty()) {
+                adapter.submitList(Collections.emptyList());
             } else {
-                Log.e("DocumentListFragment", "Error: documents are empty");
+                adapter.submitList(documents);
             }
         });
     }
 
     private void setSearchClickListener() {
         binding.searchButton.setOnClickListener(v -> {
-            String query = binding.searchEditText.getText().toString();
-            viewModel.setQuery(query);
+            Editable query = binding.searchEditText.getText();
+            if (TextUtils.isEmpty(query)) {
+                adapter.submitList(Collections.emptyList());
+            } else {
+                viewModel.searchByQuery(query.toString());
+            }
         });
+    }
+
+    private void checkArguments() {
+        if (getArguments() != null) {
+            String title = DocumentListFragmentArgs.fromBundle(getArguments()).getTitle();
+            String author = DocumentListFragmentArgs.fromBundle(getArguments()).getAuthor();
+            if (!TextUtils.isEmpty(title)) {
+                binding.searchEditText.setText(title);
+                viewModel.searchByTitle(title);
+            }
+            else if (!TextUtils.isEmpty(author)) {
+                binding.searchEditText.setText(author);
+                viewModel.searchByAuthor(author);
+            }
+        }
     }
 }

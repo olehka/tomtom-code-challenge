@@ -1,6 +1,7 @@
 package com.tomtom.codechallenge.data;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.LruCache;
 
@@ -52,35 +53,59 @@ public class DataRepository {
         return instance;
     }
 
-    public LiveData<List<Document>> searchDocumentsByQuery(String query) {
-        return documentDao.loadAllDocuments();
-    }
-
-    public LiveData<List<Document>> searchDocumentsByTitle(String title) {
-        return documentDao.searchDocumentsByTitle(title);
-    }
-
-    public LiveData<List<Document>> searchDocumentsByAuthor(String author) {
-        return documentDao.searchDocumentsByAuthor(author);
-    }
-
     public LiveData<Document> getDocumentById(String id) {
-        return documentDao.loadDocument(id);
+        return documentDao.getDocument(id);
     }
 
-    public LiveData<List<Document>> getAllDocumentsFromDb() {
-        return documentDao.loadAllDocuments();
+    public LiveData<List<Document>> getAllDocuments() {
+        return documentDao.getAllDocuments();
     }
 
-    public void fetchDocumentsByQueryFromNetwork(String query) {
-        appExecutors.networkIO().execute(() -> {
-            ApiResponse<List<Document>> response = apiService.getDocumentsByQuery(query);
-            if (response.hasError()) {
-                Log.e("DataRepository", "Network error: " + response.getError());
+    public void fetchDocumentsByQuery(String query) {
+        if (TextUtils.isEmpty(query)) return;
+        deleteAllDocuments();
+        appExecutors.networkIO().execute(() ->
+                processApiResponse(apiService.getDocumentsByQuery(query)));
+    }
+
+    public void fetchDocumentsByTitle(String title) {
+        if (TextUtils.isEmpty(title)) return;
+        deleteAllDocuments();
+        appExecutors.networkIO().execute(() ->
+                processApiResponse(apiService.getDocumentsByTitle(title)));
+    }
+
+    public void fetchDocumentsByAuthor(String author) {
+        if (TextUtils.isEmpty(author)) return;
+        deleteAllDocuments();
+        appExecutors.networkIO().execute(() ->
+                processApiResponse(apiService.getDocumentsByAuthor(author)));
+    }
+
+    private void processApiResponse(ApiResponse<List<Document>> response) {
+        if (response.hasError()) {
+            Log.e("DataRepository", "Network error: " + response.getError());
+        } else {
+            List<Document> documentList = response.getBody();
+            if (documentList != null && !documentList.isEmpty()) {
+                saveDocuments(documentList);
             } else {
-                List<Document> documentList = response.getBody();
-                appExecutors.diskIO().execute(() -> documentDao.saveDocuments(documentList));
+                Log.e("DataRepository", "Empty document list");
             }
+        }
+    }
+
+    private void saveDocuments(List<Document> documentList) {
+        appExecutors.diskIO().execute(() -> {
+            Log.d("DataRepository", "Save documents: " + documentList.size());
+            documentDao.saveDocuments(documentList);
+        });
+    }
+
+    private void deleteAllDocuments() {
+        appExecutors.diskIO().execute(() -> {
+            Log.d("DataRepository", "Delete all documents");
+            documentDao.deleteAllDocuments();
         });
     }
 

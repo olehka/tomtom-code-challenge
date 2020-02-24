@@ -1,7 +1,6 @@
 package com.tomtom.codechallenge.ui;
 
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.tomtom.codechallenge.R;
 import com.tomtom.codechallenge.data.Document;
@@ -38,6 +39,9 @@ public class DocumentDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getArguments() == null) {
+            return;
+        }
         String documentId = DocumentDetailFragmentArgs.fromBundle(getArguments()).getDocumentId();
         viewModel = new ViewModelProvider(this, InjectorUtil.getDocumentDetailViewModelFactory(this, documentId)).get(DocumentDetailViewModel.class);
         setClickListeners();
@@ -91,6 +95,19 @@ public class DocumentDetailFragment extends Fragment {
     }
 
     private void setClickListeners() {
-        //TODO add title, author handler
+        binding.documentTitle.setOnClickListener(v -> navigateToDocumentListScreen(
+                v, binding.documentTitle.getText().toString(), ""
+        ));
+        binding.documentAuthor.setOnClickListener(v -> navigateToDocumentListScreen(
+                v, "", binding.documentAuthor.getText().toString()
+        ));
+    }
+
+    private void navigateToDocumentListScreen(View view, String title, String author) {
+        NavDirections directions = DocumentDetailFragmentDirections
+                .actionDocumentDetailToDocumentListFragmane()
+                .setTitle(title)
+                .setAuthor(author);
+        Navigation.findNavController(view).navigate(directions);
     }
 }
