@@ -2,6 +2,7 @@ package com.tomtom.codechallenge.ui;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,7 @@ public class DocumentDetailFragment extends Fragment {
             textView.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setId(i);
             textView.setTag(getString(R.string.isbn_tag) + i);
             textView.setText(isbn);

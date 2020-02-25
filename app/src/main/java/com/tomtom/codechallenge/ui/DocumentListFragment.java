@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.tomtom.codechallenge.R;
 import com.tomtom.codechallenge.adapters.DocumentListAdapter;
 import com.tomtom.codechallenge.data.Document;
+import com.tomtom.codechallenge.data.FetchResult;
 import com.tomtom.codechallenge.databinding.FragmentDocumentListBinding;
 import com.tomtom.codechallenge.utilities.InjectorUtil;
 import com.tomtom.codechallenge.viewmodels.DocumentListViewModel;
@@ -43,7 +46,8 @@ public class DocumentListFragment extends Fragment {
         viewModel = new ViewModelProvider(this, InjectorUtil.getDocumentListViewModelFactory(this)).get(DocumentListViewModel.class);
         setSearchClickListener();
         checkArguments();
-        subscribeUi(viewModel.getDocuments());
+        subscribeDocuments(viewModel.getDocuments());
+        subscribeErrors(viewModel.getResult());
     }
 
     @Override
@@ -53,14 +57,26 @@ public class DocumentListFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void subscribeUi(LiveData<List<Document>> liveData) {
+    private void subscribeDocuments(LiveData<List<Document>> liveData) {
         liveData.observe(getViewLifecycleOwner(), documents -> {
+            hideProgressBar();
             if (documents == null || documents.isEmpty()) {
                 adapter.submitList(Collections.emptyList());
             } else {
                 adapter.submitList(documents);
             }
         });
+    }
+
+    private void subscribeErrors(LiveData<FetchResult> liveData) {
+        liveData.observe(
+                getViewLifecycleOwner(),
+                result -> {
+                    if (result.hasError()) {
+                        showError(result.getErrorMessage());
+                        hideProgressBar();
+                    }
+                });
     }
 
     private void setSearchClickListener() {
@@ -70,6 +86,7 @@ public class DocumentListFragment extends Fragment {
                 adapter.submitList(Collections.emptyList());
             } else {
                 viewModel.searchByQuery(query.toString());
+                showProgressBar();
             }
         });
     }
@@ -81,11 +98,27 @@ public class DocumentListFragment extends Fragment {
             if (!TextUtils.isEmpty(title)) {
                 binding.searchEditText.setText(title);
                 viewModel.searchByTitle(title);
-            }
-            else if (!TextUtils.isEmpty(author)) {
+                showProgressBar();
+            } else if (!TextUtils.isEmpty(author)) {
                 binding.searchEditText.setText(author);
                 viewModel.searchByAuthor(author);
+                showProgressBar();
             }
         }
+    }
+
+    private void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        binding.progressBar.setVisibility(View.GONE);
+    }
+
+    private void showError(String message) {
+        Toast.makeText(
+                getContext(),
+                getString(R.string.loading_error_format, message),
+                Toast.LENGTH_LONG).show();
     }
 }

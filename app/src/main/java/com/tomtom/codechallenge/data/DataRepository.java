@@ -61,45 +61,40 @@ public class DataRepository {
         return documentDao.getAllDocuments();
     }
 
-    public void fetchDocumentsByQuery(String query) {
-        if (TextUtils.isEmpty(query)) return;
+    public LiveData<FetchResult> fetchDocumentsByQuery(String query) {
         deleteAllDocuments();
-        appExecutors.networkIO().execute(() ->
-                processApiResponse(apiService.getDocumentsByQuery(query)));
-    }
-
-    public void fetchDocumentsByTitle(String title) {
-        if (TextUtils.isEmpty(title)) return;
-        deleteAllDocuments();
-        appExecutors.networkIO().execute(() ->
-                processApiResponse(apiService.getDocumentsByTitle(title)));
-    }
-
-    public void fetchDocumentsByAuthor(String author) {
-        if (TextUtils.isEmpty(author)) return;
-        deleteAllDocuments();
-        appExecutors.networkIO().execute(() ->
-                processApiResponse(apiService.getDocumentsByAuthor(author)));
-    }
-
-    private void processApiResponse(ApiResponse<List<Document>> response) {
-        if (response.hasError()) {
-            Log.e("DataRepository", "Network error: " + response.getError());
-        } else {
-            List<Document> documentList = response.getBody();
-            if (documentList != null && !documentList.isEmpty()) {
-                saveDocuments(documentList);
-            } else {
-                Log.e("DataRepository", "Empty document list");
+        FetchDocumentTask task = new FetchDocumentTask(documentDao) {
+            @Override
+            ApiResponse<List<Document>> fetchDocuments() {
+                return apiService.getDocumentsByQuery(query);
             }
-        }
+        };
+        appExecutors.networkIO().execute(task);
+        return task.getResultLiveData();
     }
 
-    private void saveDocuments(List<Document> documentList) {
-        appExecutors.diskIO().execute(() -> {
-            Log.d("DataRepository", "Save documents: " + documentList.size());
-            documentDao.saveDocuments(documentList);
-        });
+    public LiveData<FetchResult> fetchDocumentsByTitle(String title) {
+        deleteAllDocuments();
+        FetchDocumentTask task = new FetchDocumentTask(documentDao) {
+            @Override
+            ApiResponse<List<Document>> fetchDocuments() {
+                return apiService.getDocumentsByTitle(title);
+            }
+        };
+        appExecutors.networkIO().execute(task);
+        return task.getResultLiveData();
+    }
+
+    public LiveData<FetchResult> fetchDocumentsByAuthor(String author) {
+        deleteAllDocuments();
+        FetchDocumentTask task = new FetchDocumentTask(documentDao) {
+            @Override
+            ApiResponse<List<Document>> fetchDocuments() {
+                return apiService.getDocumentsByAuthor(author);
+            }
+        };
+        appExecutors.networkIO().execute(task);
+        return task.getResultLiveData();
     }
 
     private void deleteAllDocuments() {

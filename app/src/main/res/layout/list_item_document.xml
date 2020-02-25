@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="clickListener"
             type="android.view.View.OnClickListener" />
@@ -15,19 +16,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{clickListener}"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/list_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{document.title}" />
+            android:text="@{document.title}"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/list_item_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{document.author}" />
+            android:text="@{document.author}"
+            android:textSize="16sp" />
     </LinearLayout>
-
 </layout>
