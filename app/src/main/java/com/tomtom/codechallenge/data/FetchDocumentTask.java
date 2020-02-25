@@ -34,6 +34,7 @@ public abstract class FetchDocumentTask implements Runnable {
             } else {
                 Log.d("DataRepository", "Save documents: " + documentList.size());
                 resultLiveData.postValue(FetchResult.success());
+                documentDao.deleteAllDocuments();
                 documentDao.saveDocuments(documentList);
             }
         }

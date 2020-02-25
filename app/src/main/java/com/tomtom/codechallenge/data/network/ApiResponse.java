@@ -14,16 +14,16 @@ public final class ApiResponse<T> {
         this.error = error;
     }
 
-    static <T> ApiResponse<T> success(@Nullable T body) {
+    public static <T> ApiResponse<T> success(@Nullable T body) {
         return new ApiResponse<>(body, null);
     }
 
-    static <T> ApiResponse<T> error(@Nullable String error) {
+    public static <T> ApiResponse<T> error(@Nullable String error) {
         return new ApiResponse<>(null, error);
     }
 
     public boolean hasError() {
-        return !TextUtils.isEmpty(error);
+        return error != null && error.length() != 0;
     }
 
     @Nullable

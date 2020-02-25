@@ -18,7 +18,7 @@ public class AppExecutors {
 
     private final Executor mMainThread;
 
-    private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
+    public AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
         this.mDiskIO = diskIO;
         this.mNetworkIO = networkIO;
         this.mMainThread = mainThread;

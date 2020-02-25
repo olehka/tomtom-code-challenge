@@ -5,12 +5,13 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 import com.tomtom.codechallenge.concurrent.AppExecutors;
+import com.tomtom.codechallenge.concurrent.TaskRunner;
 import com.tomtom.codechallenge.data.DataRepository;
 import com.tomtom.codechallenge.data.db.AppDatabase;
 import com.tomtom.codechallenge.data.db.DocumentDao;
 import com.tomtom.codechallenge.data.network.ApiService;
 import com.tomtom.codechallenge.data.network.ApiServiceImpl;
-import com.tomtom.codechallenge.data.network.HttpClient;
+import com.tomtom.codechallenge.data.network.HttpClientImpl;
 import com.tomtom.codechallenge.viewmodels.DocumentDetailViewModelFactory;
 import com.tomtom.codechallenge.viewmodels.DocumentListViewModelFactory;
 
@@ -21,7 +22,7 @@ public class InjectorUtil {
     }
 
     public static ApiService getApiService() {
-        return ApiServiceImpl.getInstance(HttpClient.getInstance());
+        return ApiServiceImpl.getInstance(HttpClientImpl.getInstance());
     }
 
     public static DocumentDao getDocumentDao(Context context) {
@@ -37,6 +38,6 @@ public class InjectorUtil {
     }
 
     public static DocumentDetailViewModelFactory getDocumentDetailViewModelFactory(Fragment fragment, String documentId) {
-        return new DocumentDetailViewModelFactory(documentId, getRepository(fragment.requireContext()));
+        return new DocumentDetailViewModelFactory(documentId, getRepository(fragment.requireContext()), new TaskRunner(getAppExecutors()));
     }
 }

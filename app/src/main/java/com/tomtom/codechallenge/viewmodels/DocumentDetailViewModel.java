@@ -18,18 +18,16 @@ public class DocumentDetailViewModel extends ViewModel {
 
     public static final int ISBN_MAX_SIZE = 5;
 
-    //    private final String documentId;
     private final LiveData<Document> document;
     private final DataRepository repository;
 
     private final TaskRunner taskRunner;
     private final List<MutableLiveData<Bitmap>> bitmapList;
 
-    public DocumentDetailViewModel(String documentId, DataRepository repository) {
-//        this.documentId = documentId;
+    public DocumentDetailViewModel(String documentId, DataRepository repository, TaskRunner taskRunner) {
         this.repository = repository;
         this.document = repository.getDocumentById(documentId);
-        this.taskRunner = new TaskRunner(repository.getAppExecutors());
+        this.taskRunner = taskRunner;
         this.bitmapList = new ArrayList<>();
         initBitmapList();
     }

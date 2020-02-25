@@ -1,11 +1,13 @@
 package com.tomtom.codechallenge.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,12 +61,12 @@ public class DocumentListFragment extends Fragment {
 
     private void subscribeDocuments(LiveData<List<Document>> liveData) {
         liveData.observe(getViewLifecycleOwner(), documents -> {
-            hideProgressBar();
             if (documents == null || documents.isEmpty()) {
                 adapter.submitList(Collections.emptyList());
             } else {
                 adapter.submitList(documents);
             }
+            hideProgressBar();
         });
     }
 
@@ -73,7 +75,9 @@ public class DocumentListFragment extends Fragment {
                 getViewLifecycleOwner(),
                 result -> {
                     if (result.hasError()) {
-                        showError(result.getErrorMessage());
+                        showMessage(getString(
+                                R.string.loading_error_format,
+                                result.getErrorMessage()));
                         hideProgressBar();
                     }
                 });
@@ -81,6 +85,7 @@ public class DocumentListFragment extends Fragment {
 
     private void setSearchClickListener() {
         binding.searchButton.setOnClickListener(v -> {
+            hideKeyboardFrom(v);
             Editable query = binding.searchEditText.getText();
             if (TextUtils.isEmpty(query)) {
                 adapter.submitList(Collections.emptyList());
@@ -115,10 +120,14 @@ public class DocumentListFragment extends Fragment {
         binding.progressBar.setVisibility(View.GONE);
     }
 
-    private void showError(String message) {
-        Toast.makeText(
-                getContext(),
-                getString(R.string.loading_error_format, message),
-                Toast.LENGTH_LONG).show();
+    private void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void hideKeyboardFrom(View view) {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

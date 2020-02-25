@@ -21,7 +21,7 @@ public class BitmapLoadingTask implements Callable<Bitmap> {
     }
 
     @Override
-    public Bitmap call() throws Exception {
+    public Bitmap call() {
         Bitmap bitmap = repository.getBitmapFromMemoryCache(value);
         if (bitmap != null) {
             return bitmap;

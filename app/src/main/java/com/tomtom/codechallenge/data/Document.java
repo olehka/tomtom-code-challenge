@@ -23,8 +23,6 @@ public class Document {
     @JsonProperty
     private String title;
 
-    private String author;
-
     @JsonProperty("author_name")
     private List<String> authors;
 
@@ -51,10 +49,6 @@ public class Document {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public void setIsbnList(List<String> isbnList) {
@@ -94,7 +88,7 @@ public class Document {
             return false;
         }
         Document doc = (Document) obj;
-        return id.equals(doc.id) && title.equals(doc.title) && author.equals(doc.author);
+        return id.equals(doc.id) && title.equals(doc.title) && getAuthor().equals(doc.getAuthor());
     }
 
     @Override
@@ -102,7 +96,7 @@ public class Document {
         int hash = 7;
         hash = 31 * hash + id.hashCode();
         hash = 31 * hash + title.hashCode();
-        hash = 31 * hash + author.hashCode();
+        hash = 31 * hash + getAuthor().hashCode();
         return hash;
     }
 }

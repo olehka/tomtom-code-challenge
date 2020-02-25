@@ -7,8 +7,13 @@ import com.tomtom.codechallenge.data.Document;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+public
 class DocumentDataHolder {
 
     @JsonProperty("docs")
     List<Document> documents;
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
 }

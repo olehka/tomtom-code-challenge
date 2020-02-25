@@ -7,11 +7,11 @@ public final class FetchResult {
         this.errorMessage = errorMessage;
     }
 
-    static FetchResult success() {
+    public static FetchResult success() {
         return new FetchResult(null);
     }
 
-    static FetchResult error(String errorMessage) {
+    public static FetchResult error(String errorMessage) {
         return new FetchResult(errorMessage);
     }
 

@@ -1,7 +1,6 @@
 package com.tomtom.codechallenge.data;
 
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.LruCache;
 
@@ -25,7 +24,7 @@ public class DataRepository {
     //developer.android.com/topic/performance/graphics/cache-bitmap
     private LruCache<String, Bitmap> memoryCache;
 
-    private DataRepository(DocumentDao documentDao, ApiService apiService, AppExecutors appExecutors) {
+    public DataRepository(DocumentDao documentDao, ApiService apiService, AppExecutors appExecutors) {
         this.documentDao = documentDao;
         this.apiService = apiService;
         this.appExecutors = appExecutors;
@@ -62,7 +61,6 @@ public class DataRepository {
     }
 
     public LiveData<FetchResult> fetchDocumentsByQuery(String query) {
-        deleteAllDocuments();
         FetchDocumentTask task = new FetchDocumentTask(documentDao) {
             @Override
             ApiResponse<List<Document>> fetchDocuments() {
@@ -74,7 +72,6 @@ public class DataRepository {
     }
 
     public LiveData<FetchResult> fetchDocumentsByTitle(String title) {
-        deleteAllDocuments();
         FetchDocumentTask task = new FetchDocumentTask(documentDao) {
             @Override
             ApiResponse<List<Document>> fetchDocuments() {
@@ -86,7 +83,6 @@ public class DataRepository {
     }
 
     public LiveData<FetchResult> fetchDocumentsByAuthor(String author) {
-        deleteAllDocuments();
         FetchDocumentTask task = new FetchDocumentTask(documentDao) {
             @Override
             ApiResponse<List<Document>> fetchDocuments() {
@@ -95,13 +91,6 @@ public class DataRepository {
         };
         appExecutors.networkIO().execute(task);
         return task.getResultLiveData();
-    }
-
-    private void deleteAllDocuments() {
-        appExecutors.diskIO().execute(() -> {
-            Log.d("DataRepository", "Delete all documents");
-            documentDao.deleteAllDocuments();
-        });
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -116,9 +105,5 @@ public class DataRepository {
 
     public ApiService getApiService() {
         return apiService;
-    }
-
-    public AppExecutors getAppExecutors() {
-        return appExecutors;
     }
 }

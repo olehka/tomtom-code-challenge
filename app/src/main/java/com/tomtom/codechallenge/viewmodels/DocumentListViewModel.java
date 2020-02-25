@@ -19,7 +19,7 @@ public class DocumentListViewModel extends ViewModel {
     private final LiveData<FetchResult> result;
     private final MutableLiveData<SearchPair> search;
 
-    DocumentListViewModel(@NonNull DataRepository repository) {
+    public DocumentListViewModel(@NonNull DataRepository repository) {
         this.documents = repository.getAllDocuments();
         this.search = new MutableLiveData<>();
         this.result = Transformations.switchMap(
